@@ -1,6 +1,8 @@
 pub mod todo_operations {
     use std::io;
 
+    use postgres::Client;
+
     use crate::types::Todo;
     pub fn get_input(prompt: &str) -> String {
         println!("{}", prompt);
@@ -12,12 +14,16 @@ pub mod todo_operations {
         input.trim().to_string()
     }
 
-    pub fn add_todo(todos: &mut Vec<Todo>, id: u32, title: String) {
-        let todo = Todo { id, title };
-        todos.push(todo);
+    pub fn get_all_todos(client: &Client) -> Vec<Todo> {
+        let todos: Vec<Todo> = Vec::new();
+        todos
     }
 
-    pub fn mark_todo_as_done(todos: &mut Vec<Todo>, todo_id: String) {
+    pub fn add_todo(title: String, todo_id: u32, client: &Client) {
+        let todo = Todo { id, title };
+    }
+
+    pub fn mark_todo_as_done(todo_id: String, client: &Client) {
         match todo_id.parse::<u32>() {
             Ok(todo_id) => {
                 if let Some(todo) = todos.iter().find(|todo| todo.id == todo_id) {

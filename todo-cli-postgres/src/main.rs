@@ -1,17 +1,14 @@
 mod types;
 mod utils;
 
-use crate::types::Todo;
 use crate::utils::db_connection::connect_to_db;
-use crate::utils::todo_operations::{add_todo, get_input, mark_todo_as_done};
+use utils::todo_operations::{add_todo, get_all_todos, get_input, mark_todo_as_done};
 
 fn main() {
     let client = match connect_to_db() {
         Ok(client) => client,
         Err(e) => panic!("Error connecting to DB: {}", e),
     };
-
-    let mut todos: Vec<Todo> = Vec::new();
     let mut generated_id: u32 = 0;
     loop {
         println!("");
@@ -28,18 +25,16 @@ fn main() {
             "1" => {
                 let todo_title = get_input("Enter the todo title: ");
                 generated_id += 1;
-                add_todo(&mut todos, generated_id, todo_title);
+                add_todo(todo_title, generated_id, &client);
             }
             "2" => {
                 println!("Listing all todos:");
-                for todo in &todos {
-                    println!("ID: {}, Title: {}", todo.id, todo.title);
-                }
+                get_all_todos(&client);
             }
             "3" => {
                 println!("Enter Todo ID to mark as done and delete it:");
                 let todo_id = get_input("Enter the todo id: ");
-                mark_todo_as_done(&mut todos, todo_id);
+                mark_todo_as_done(todo_id, &client);
             }
             "4" => {
                 println!("Goodbye!");
