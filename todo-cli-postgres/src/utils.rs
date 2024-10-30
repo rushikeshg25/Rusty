@@ -1,7 +1,7 @@
 pub mod todo_operations {
     use std::io;
 
-    use postgres::Client;
+    use postgres::{Client, Row};
 
     use crate::types::Todo;
     pub fn get_input(prompt: &str) -> String {
@@ -14,27 +14,45 @@ pub mod todo_operations {
         input.trim().to_string()
     }
 
-    pub fn get_all_todos(client: &Client) -> Vec<Todo> {
-        let todos: Vec<Todo> = Vec::new();
+    pub fn get_all_todos(client: &mut Client) -> Vec<Todo> {
+        let mut todos = Vec::new();
+
+        let rows = client
+            .query("SELECT todo_id, title FROM person", &[])
+            .expect("Query failed");
+
+        for row in rows {
+            let todo = row_to_todo(row);
+            todos.push(todo);
+        }
+
         todos
     }
 
-    pub fn add_todo(title: String, todo_id: u32, client: &Client) {
-        let todo = Todo { id, title };
+    fn row_to_todo(row: Row) -> Todo {
+        Todo {
+            todo_id: row.get("todo_id"),
+            title: row.get("title"),
+        }
     }
 
-    pub fn mark_todo_as_done(todo_id: String, client: &Client) {
-        match todo_id.parse::<u32>() {
-            Ok(todo_id) => {
-                if let Some(todo) = todos.iter().find(|todo| todo.id == todo_id) {
-                    println!("{} is marked as done", todo.title);
-                    todos.retain(|todo| todo.id != todo_id);
-                } else {
-                    println!("Todo with ID {} not found", todo_id);
-                }
+    pub fn add_todo(title: String, todo_id: u32, client: &mut Client) {
+        match client.execute(
+            "INSERT INTO todos (todo_id, title) VALUES ($1, $2)",
+            &[&todo_id, &title],
+        ) {
+            Ok(_) => {}
+            Err(e) => {
+                println!("Error: {}", e);
             }
-            Err(_) => {
-                println!("Invalid todo ID");
+        }
+    }
+
+    pub fn mark_todo_as_done(todo_id: String, client: &mut Client) {
+        match client.execute("DELETE FROM todos WHERE todo_id = $1", &[&todo_id]) {
+            Ok(_) => {}
+            Err(e) => {
+                println!("Error: {}", e);
             }
         }
     }
@@ -49,7 +67,7 @@ pub mod db_connection {
     pub fn connect_to_db() -> Result<Client, Box<dyn Error>> {
         dotenv().ok();
         let db_url = env::var("DATABASE_URL").expect("DB URL not set");
-
+        println!("DB URL: {}", db_url);
         let connection = Client::connect(&db_url, NoTls)?;
 
         Ok(connection)
