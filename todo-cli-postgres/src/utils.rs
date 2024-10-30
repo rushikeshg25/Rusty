@@ -1,4 +1,4 @@
-pub mod utils {
+pub mod todo_operations {
     use std::io;
 
     use crate::types::Todo;
@@ -31,5 +31,21 @@ pub mod utils {
                 println!("Invalid todo ID");
             }
         }
+    }
+}
+
+pub mod db_connection {
+    use dotenv::dotenv;
+    use postgres::{Client, NoTls};
+    use std::env;
+    use std::error::Error;
+
+    pub fn connect_to_db() -> Result<Client, Box<dyn Error>> {
+        dotenv().ok();
+        let db_url = env::var("DATABASE_URL").expect("DB URL not set");
+
+        let connection = Client::connect(&db_url, NoTls)?;
+
+        Ok(connection)
     }
 }
