@@ -1,8 +1,9 @@
+pub mod types;
 use std::{
     io::Read,
     net::{TcpListener, TcpStream},
 };
-
+use types::http_types::http_types::{http_request, http_response};
 #[allow(unused)]
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:6969").expect("Failed to bind Tcp to this address");
