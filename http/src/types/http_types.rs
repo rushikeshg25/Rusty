@@ -4,9 +4,9 @@ pub mod http_types {
     use super::*;
 
     pub struct httpRequest {
-        method_type: httpMethods,
-        host: String,
-        http_version: String,
+        pub method_type: httpMethods,
+        pub host: String,
+        pub http_version: String,
     }
 
     pub fn response_status_codes() -> HashMap<i32, &'static str> {
