@@ -4,7 +4,7 @@ pub mod http_helper {
     pub fn parse_request(req: &str) -> httpRequest {
         let lines: Vec<&str> = req.split("\r\n").collect();
         let req_info: Vec<&str> = lines[0].split("/").map(|i| i.trim()).collect();
-        // for i in req_info {
+        // for i in &req_info {
         //     println!("{}", i);
         // }
         return httpRequest {

@@ -2,7 +2,7 @@
 pub mod types;
 pub mod utils;
 use std::{
-    io::Read,
+    io::{Read, Write},
     net::{TcpListener, TcpStream},
 };
 use types::http_types::http_types::{httpRequest, http_response};
@@ -32,4 +32,14 @@ fn handle_client(mut stream: TcpStream) {
     let request = String::from_utf8_lossy(&buffer[..bytes_read]);
     // println!("{}", request);
     let parsed_req = parse_request(&request);
+    let body = "Hello world";
+    let response = format!(
+        "HTTP/1.1 200 OK\r\nContent-Length: {}\r\nContent-Type: text/plain\r\n\r\n{}",
+        body.len(),
+        body
+    );
+    stream
+        .write(response.as_bytes())
+        .expect("Failed to write response to client");
+    stream.flush().expect("Failed to flush stream");
 }
