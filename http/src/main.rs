@@ -26,5 +26,7 @@ fn handle_client(mut stream: TcpStream) {
         .read(&mut buffer)
         .expect("Failed to read from client!");
     let request = String::from_utf8_lossy(&buffer[..bytes_read]);
-    println!("{:?}", request);
+    let parsed_req = (&request);
 }
+
+fn parse_http_request(request: &str) {}
