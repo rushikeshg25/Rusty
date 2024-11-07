@@ -1,10 +1,11 @@
+#[allow(dead_code)]
 pub mod types;
 pub mod utils;
 use std::{
     io::Read,
     net::{TcpListener, TcpStream},
 };
-use types::http_types::http_types::{http_request, http_response};
+use types::http_types::http_types::{httpRequest, http_response};
 use utils::http_lib::http_helper::parse_request;
 
 fn main() {
@@ -29,6 +30,6 @@ fn handle_client(mut stream: TcpStream) {
         .read(&mut buffer)
         .expect("Failed to read from client!");
     let request = String::from_utf8_lossy(&buffer[..bytes_read]);
-    println!("{}", request);
-    // let parsed_req = parse_request(&request);
+    // println!("{}", request);
+    let parsed_req = parse_request(&request);
 }
