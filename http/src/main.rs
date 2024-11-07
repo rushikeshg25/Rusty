@@ -1,10 +1,12 @@
 pub mod types;
+pub mod utils;
 use std::{
     io::Read,
     net::{TcpListener, TcpStream},
 };
 use types::http_types::http_types::{http_request, http_response};
-#[allow(unused)]
+use utils::http_lib::http_helper::parse_request;
+
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:6969").expect("Failed to bind Tcp to this address");
     println!("Listening on 6969");
@@ -27,7 +29,6 @@ fn handle_client(mut stream: TcpStream) {
         .read(&mut buffer)
         .expect("Failed to read from client!");
     let request = String::from_utf8_lossy(&buffer[..bytes_read]);
-    let parsed_req = (&request);
+    println!("{}", request);
+    // let parsed_req = parse_request(&request);
 }
-
-fn parse_http_request(request: &str) {}

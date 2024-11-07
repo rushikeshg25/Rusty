@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 pub mod http_types {
     use super::*;
+    #[derive(Debug)]
     pub struct http_request {
         host: String,
         connection: String,
