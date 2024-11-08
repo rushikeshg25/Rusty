@@ -5,8 +5,8 @@ pub mod http_types {
 
     pub struct HttpRequest {
         pub method_type: HttpMethods,
-        pub host: String,
-        pub http_version: String,
+        pub body: Option<HashMap<String, String>>,
+        pub headers: HashMap<String, String>,
     }
 
     pub fn response_status_codes() -> HashMap<i32, &'static str> {
