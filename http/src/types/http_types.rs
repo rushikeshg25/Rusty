@@ -3,8 +3,8 @@ use std::collections::HashMap;
 pub mod http_types {
     use super::*;
 
-    pub struct httpRequest {
-        pub method_type: httpMethods,
+    pub struct HttpRequest {
+        pub method_type: HttpMethods,
         pub host: String,
         pub http_version: String,
     }
@@ -13,12 +13,12 @@ pub mod http_types {
         return HashMap::from([(200, "OK"), (404, "Not Found"), (501, "Not Implemented")]);
     }
 
-    pub enum httpMethods {
+    pub enum HttpMethods {
         GET,
         POST,
         PUT,
         DELETE,
     }
 
-    pub struct http_response {}
+    pub struct HttpResponse {}
 }
